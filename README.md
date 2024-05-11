@@ -16,21 +16,34 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Authentication Flow
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. **Authentication Route Setup**
+   - Establish the authentication route (`/api/auth/[...nextauth]`).
 
-## Learn More
+2. **Configuration Separation**
+   - Define all configuration in `Options.ts`.
+   - Manage routes in `route.ts` for better code organization.
 
-To learn more about Next.js, take a look at the following resources:
+3. **Credential Provider Configuration**
+   - Opt for a Credential Provider in options, specifying the expected credentials.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. **Custom Authorization Strategy**
+   - Implement a custom authorization strategy since credentials are custom.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+5. **NextAuth Page Definition**
+   - Specify the pages to be handled by NextAuth, using the JWT strategy.
 
-## Deploy on Vercel
+6. **Callback Modification**
+   - Modify callbacks to store additional data in session and token, reducing DB calls.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+7. **Extension of NextAuth Types**
+   - Extend the default types of NextAuth in `next-auth.d.ts` to accommodate customizations.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+8. **Next.js Middleware Setup**
+   - Configure Next.js middleware to enable authentication and check user authentication status. Route users accordingly.
+
+9. **Session Provider Setup**
+   - Set up the session provider to provide authentication context to the entire application.
+
+
