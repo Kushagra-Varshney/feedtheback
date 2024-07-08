@@ -20,7 +20,7 @@ export async function GET(request: Request) {
         );
     }
 
-    //it is important to get user id in this manner as in aggregatio pipeline we need userID 
+    //it is important to get user id in this manner as in aggregation pipeline we need userID 
     //as mongodb object id and not as string, so keep in mind whenever dealing with userid as string
     const userId = new mongoose.Types.ObjectId(user._id);
 
