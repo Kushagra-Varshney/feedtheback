@@ -1,34 +1,13 @@
-import { openai } from '@ai-sdk/openai';
-import { generateText } from 'ai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// Allow streaming responses up to 30 seconds
-export const maxDuration = 30;
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 
 export async function POST(req: Request) {
   const prompt = "Create a list of three open-ended and engaging questions formatted as a single string. Each question should be separated by '||'. These questions are for an anonymous social messaging platform, like Qooh.me, and should be suitable for a diverse audience. Avoid personal or sensitive topics, focusing instead on universal themes that encourage friendly interaction. For example, your output should be structured like this: 'What’s a hobby you’ve recently started?||If you could have dinner with any historical figure, who would it be?||What’s a simple thing that makes you happy?'. Ensure the questions are intriguing, foster curiosity, and contribute to a positive and welcoming conversational environment.";
 
-  try {
-    const text = await generateText({
-      model: openai('gpt-4o-2024-05-13'),
-      prompt,
-    });
-  
-    return Response.json(
-        {
-            success: true,
-            message: text,
-        },
-        { status: 200 }
-    );
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-  } catch (error) {
-    console.error('Failed to suggest messages');
-    return Response.json(
-      {
-        success: false,
-        message: 'Failed to suggest messages',
-      },
-      { status: 500 }
-    );
-  }
+  const result = await model.generateContent(prompt);
+
+  return Response.json({ content: result.response.text() }, { status: 200 });
 }
