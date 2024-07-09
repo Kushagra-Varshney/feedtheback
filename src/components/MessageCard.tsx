@@ -56,7 +56,7 @@ export default function MessageCard({ message, onMessageDelete }: MessageCardPro
     return (
         <Card>
             <CardHeader>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-start space-x-2">
                     <CardTitle>{message.content}</CardTitle>
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
