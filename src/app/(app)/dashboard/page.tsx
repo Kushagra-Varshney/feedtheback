@@ -24,7 +24,7 @@ export default function Dashboard() {
   const { toast } = useToast();
 
   const handleDeleteMessage = (messageId: string) => {
-    setMessages((prevMessages) => prevMessages.filter((message) => message._id !== messageId));
+    setMessages(messages.filter((message) => message._id !== messageId));
   }
 
   const { data: session } = useSession();
@@ -41,20 +41,20 @@ export default function Dashboard() {
   const fetchAcceptMessage = useCallback(async () => {
     setIsSwitching(true);
     try {
-      const res = await axios.get<ApiResponse>('/api/accept-message');
+      const res = await axios.get<ApiResponse>('/api/accept-messages');
       setValue('acceptMessages', res.data.isAcceptingMessages);
 
     } catch (error) {
       const err = error as AxiosError<ApiResponse>;
       toast({
         title: 'Error',
-        description: err.response?.data.message || "Error fetching message acceptance status",
+        description: err.response?.data.message ?? "Error fetching message acceptance status",
         variant: 'destructive'
       });
     } finally {
       setIsSwitching(false);
     }
-  }, [setValue]);
+  }, [setValue, toast]);
 
   const fetchMessages = useCallback(async (refresh: boolean = false) => {
     setIsLoading(true);
@@ -73,7 +73,7 @@ export default function Dashboard() {
       const err = error as AxiosError<ApiResponse>;
       toast({
         title: 'Error',
-        description: err.response?.data.message || "Error fetching messages",
+        description: err.response?.data.message ?? "Error fetching messages",
         variant: 'destructive'
       });
 
@@ -81,17 +81,17 @@ export default function Dashboard() {
       setIsLoading(false);
       setIsSwitching(false);
     }
-  }, [setIsLoading, setIsSwitching, setMessages]);
+  }, [setIsLoading, setMessages, toast]);
 
   useEffect(() => {
     if (!session || !session.user) return;
     fetchMessages();
     fetchAcceptMessage();
-  }, [session, setValue, fetchAcceptMessage, fetchMessages]);
+  }, [session, setValue, fetchAcceptMessage, fetchMessages, toast]);
 
   const handleSwitchChange = async () => {
     try {
-      const res = await axios.post<ApiResponse>('/api/accept-message', {
+      const res = await axios.post<ApiResponse>('/api/accept-messages', {
         acceptMessages: !acceptMessages
       });
       setValue('acceptMessages', !acceptMessages);
@@ -103,11 +103,13 @@ export default function Dashboard() {
       const err = error as AxiosError<ApiResponse>;
       toast({
         title: 'Error',
-        description: err.response?.data.message || "Error fetching messages",
+        description: err.response?.data.message ?? "Error fetching messages",
         variant: 'destructive'
       });
     }
-  }
+  };
+
+  if (!session || !session.user) return <div>Please Login</div>;
 
   const { username } = session?.user as User;
   //explore other ideas for extracting the base url
@@ -121,11 +123,10 @@ export default function Dashboard() {
     });
   }
 
-  if (!session || !session.user) return <div>Please Login</div>;
-
   return (
     <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
       <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
+
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">
           Copy your profile URL
@@ -143,7 +144,7 @@ export default function Dashboard() {
           onCheckedChange={handleSwitchChange}
           disabled={isSwitching}
         />
-        <span>{acceptMessages ? "You are accepting messages" : "You are not accepting any messages"}</span>
+        <span className="ml-2">{acceptMessages ? "You are accepting messages" : "You are not accepting any messages"}</span>
       </div>
 
       <Separator />
@@ -153,7 +154,7 @@ export default function Dashboard() {
         variant="outline"
         onClick={(e) => {
           e.preventDefault();
-          fetchMessages(true)
+          fetchMessages(true);
         }}>
         {isLoading ? (
           <Loader2 className="animate-spin h-4 w-4" />

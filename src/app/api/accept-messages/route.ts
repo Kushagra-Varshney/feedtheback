@@ -20,6 +20,7 @@ export async function POST(request: Request) {
     }
 
     const userId = user._id;
+    console.log("got post request for ", userId);
     const {acceptMessages} = await request.json();
 
     try {
@@ -88,7 +89,7 @@ export async function GET(request: Request) {
             {
                 success: true,
                 message: "User found",
-                isAccpetingMessages: user.isAcceptingMessage
+                isAcceptingMessages: user.isAcceptingMessage
             },
             { status: 200 }
         );

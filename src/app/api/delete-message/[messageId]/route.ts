@@ -27,7 +27,7 @@ export async function DELETE(request: Request, { params }: { params: { messageId
             {
                 $pull: {
                     messages: {
-                        _id: new mongoose.Types.ObjectId(messageId)
+                        _id: messageId
                     }
                 }
             }

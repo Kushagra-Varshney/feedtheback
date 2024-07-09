@@ -25,9 +25,6 @@ export default function page() {
 
     const form = useForm<z.infer<typeof verifySchema>>({
         resolver: zodResolver(verifySchema),
-        defaultValues: {
-            code: "",
-        }
     });
 
     async function onSubmit(data: z.infer<typeof verifySchema>) {
@@ -40,7 +37,7 @@ export default function page() {
                 title: "Success",
                 description: res.data.message,
             });
-            router.replace("sign-in");
+            router.replace("/sign-in");
         } catch (error) {
             const err = error as AxiosError<ApiResponse>;
             const errorMessage = err.response?.data.message ?? "Error verifying code";

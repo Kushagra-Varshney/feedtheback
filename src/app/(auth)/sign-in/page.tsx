@@ -102,12 +102,10 @@ export default function page() {
                     </form>
                 </Form>
                 <div className="text-center mt-4">
-                    <p>
                         New User?{' '}
                         <Link href="/sign-up" className="text-blue-600 hover:text-blue-800">
                             Create An Account
                         </Link>
-                    </p>
                 </div>
             </div>
         </div>
